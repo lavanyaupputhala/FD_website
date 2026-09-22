@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Decorations</title>
+</head>
+
+<body>
+
+    <h1>✏️ Edit Decorations</h1>
+
+    {% for decoration in decorations %}
+
+        <div>
+            <p>
+                <strong>Category:</strong> {{ decoration["category"] }}
+            </p>
+
+            <p>
+                <strong>Image:</strong> {{ decoration["image"] }}
+            </p>
+
+            <a href="/edit-decoration/{{ decoration['id'] }}">
+                <button>Edit</button>
+            </a>
+
+            <hr>
+        </div>
+
+    {% endfor %}
+
+    <br>
+
+    <a href="/owner">⬅ Back to Dashboard</a>
+
+</body>
+
+</html>

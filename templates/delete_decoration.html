@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Delete Decoration</title>
+
+</head>
+
+<body>
+
+    <h1>🗑️ Delete Decoration</h1>
+
+    <form method="POST" action="/delete-decoration">
+
+        <label>
+            <strong>Choose Category:</strong>
+        </label>
+
+        <select id="category" required>
+
+            <option value="">Select Category</option>
+            <option value="Haldi">🌼 Haldi</option>
+            <option value="Wedding">💍 Wedding</option>
+            <option value="Birthday">🎂 Birthday</option>
+
+        </select>
+
+        <br><br>
+
+
+        <label>
+            <strong>Select Decoration:</strong>
+        </label>
+
+        <select id="decoration" name="decoration_id" required>
+
+            <option value="">Select Decoration</option>
+
+            {% for decoration in decorations %}
+
+                <option
+                    value="{{ decoration['id'] }}"
+                    data-category="{{ decoration['category'] }}"
+                >
+                    {{ decoration['image'] }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+
+        <button type="submit">
+            🗑️ Delete Decoration
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/owner">
+        ⬅ Back to Dashboard
+    </a>
+
+
+<script>
+
+const category = document.getElementById("category");
+const decoration = document.getElementById("decoration");
+
+category.addEventListener("change", function () {
+
+    const selectedCategory = category.value;
+
+    decoration.innerHTML = "";
+
+    const firstOption = document.createElement("option");
+    firstOption.value = "";
+    firstOption.textContent = "Select Decoration";
+
+    decoration.appendChild(firstOption);
+
+    {% for decoration in decorations %}
+
+        if ("{{ decoration['category'] }}" === selectedCategory) {
+
+            const option = document.createElement("option");
+
+            option.value = "{{ decoration['id'] }}";
+            option.textContent = "{{ decoration['image'] }}";
+
+            decoration.appendChild(option);
+        }
+
+    {% endfor %}
+
+});
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Birthday Decoration</title>
+
+    <link rel="stylesheet" href="static/birthday.css">
+
+    <style>
+
+        /* =========================
+           GALLERY
+        ========================= */
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px;
+        }
+
+        .photo {
+            position: relative;
+            width: 300px;
+            height: 250px;
+        }
+
+        .photo img {
+            width: 300px !important;
+            height: 250px !important;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+            display: block;
+        }
+
+        /* =========================
+           3 DOTS ON IMAGE
+        ========================= */
+
+        .dots {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            text-shadow: 0 2px 5px black;
+        }
+
+        /* =========================
+           WHATSAPP MENU
+        ========================= */
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 5px;
+            background: #ff69b4;
+            border-radius: 8px;
+            z-index: 20;
+        }
+
+        .menu button {
+            border: none;
+            background: #ff69b4;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* =========================
+           FULL SCREEN VIEWER
+        ========================= */
+
+        #imageViewer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #viewerImage {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+        }
+
+        /* =========================
+           PREVIOUS
+        ========================= */
+
+        #prevBtn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 45px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10001;
+        }
+
+        /* =========================
+           NEXT
+        ========================= */
+
+        #nextBtn {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 45px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10001;
+        }
+
+        /* =========================
+           CLOSE
+        ========================= */
+
+        #closeBtn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 32px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 10002;
+        }
+
+        /* =========================
+           VIEWER 3 DOTS
+        ========================= */
+
+        #viewerDots {
+            position: absolute;
+            top: 10px;
+            right: 70px;
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10002;
+            text-shadow: 0 2px 5px black;
+        }
+
+        /* =========================
+           VIEWER WHATSAPP MENU
+        ========================= */
+
+        #viewerMenu {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 55px;
+            background: #ff69b4;
+            border-radius: 8px;
+            z-index: 10003;
+        }
+
+        #viewerMenu button {
+            border: none;
+            background: #ff69b4;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .photo {
+                width: 160px;
+                height: 140px;
+            }
+
+            .photo img {
+                width: 160px !important;
+                height: 140px !important;
+            }
+
+            #viewerImage {
+                max-width: 90%;
+                max-height: 80%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<h1>🎂 Birthday Decoration</h1>
+
+<p>Our Birthday Decoration Collection</p>
+
+
+<!-- =========================
+     BIRTHDAY GALLERY
+========================= -->
+
+<div class="gallery">
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (1).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (2).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (3).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (4).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (5).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (6).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+       <img src="{{ url_for('static', filename='images/birth (7).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+       <img src="{{ url_for('static', filename='images/birth (8).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (9).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (10).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (11).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (12).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (13).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (14).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (15).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (16).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+
+
+    <div class="photo">
+        <img src="{{ url_for('static', filename='images/birth (17).jpeg') }}">
+        <div class="dots">⋮</div>
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+{% for decoration in decorations %}
+    <div class="photo">
+        <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+
+        <div class="dots">⋮</div>
+
+        <div class="menu">
+            <button onclick="whatsappBooking(event)">
+                WhatsApp Booking
+            </button>
+        </div>
+    </div>
+{% endfor %}
+
+</div>
+<!-- =========================
+     FULL SCREEN IMAGE VIEWER
+========================= -->
+
+<div id="imageViewer">
+
+
+    <button id="prevBtn">
+        ❮
+    </button>
+
+
+    <img id="viewerImage">
+
+
+    <button id="nextBtn">
+        ❯
+    </button>
+
+
+    <button id="closeBtn">
+        ✕
+    </button>
+
+
+    <!-- 3 DOTS AFTER IMAGE OPENS -->
+
+    <div id="viewerDots">
+        ⋮
+    </div>
+
+
+    <!-- WHATSAPP OPTION -->
+
+    ```html
+<div id="viewerMenu">
+
+    <button id="zoomIn">
+        🔍 Zoom In
+    </button>
+
+    <button id="zoomOut">
+        🔎 Zoom Out
+    </button>
+
+    <button id="resetZoom">
+        ↺ Reset Zoom
+    </button>
+
+    <button id="shareButton">
+        🔗 Share
+    </button>
+
+    <button id="bookingButton" onclick="whatsappBooking(event)">
+        📱 WhatsApp Booking
+    </button>
+
+</div>
+```
+
+
+        <button onclick="whatsappBooking(event)">
+            WhatsApp Booking
+        </button>
+
+    </div>
+
+
+</div>
+
+```html
+<script>
+
+
+/* =========================
+   GET ELEMENTS
+========================= */
+
+const images =
+    document.querySelectorAll(".photo img");
+
+const imageViewer =
+    document.getElementById("imageViewer");
+
+const viewerImage =
+    document.getElementById("viewerImage");
+
+const prevBtn =
+    document.getElementById("prevBtn");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+const closeBtn =
+    document.getElementById("closeBtn");
+
+const viewerDots =
+    document.getElementById("viewerDots");
+
+const viewerMenu =
+    document.getElementById("viewerMenu");
+
+const zoomIn =
+    document.getElementById("zoomIn");
+
+const zoomOut =
+    document.getElementById("zoomOut");
+
+const resetZoom =
+    document.getElementById("resetZoom");
+
+
+let currentIndex = 0;
+let zoomLevel = 1;
+
+
+/* =========================
+   IMAGE CLICK
+========================= */
+
+images.forEach(function(image, index) {
+
+    image.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        currentIndex = index;
+
+        viewerImage.src = image.src;
+
+        zoomLevel = 1;
+
+        viewerImage.style.transform =
+            "scale(1)";
+
+        imageViewer.style.display = "flex";
+
+        viewerMenu.style.display = "none";
+
+    });
+
+});
+
+
+/* =========================
+   GALLERY 3 DOTS
+========================= */
+
+const dots =
+    document.querySelectorAll(".dots");
+
+
+dots.forEach(function(dot) {
+
+    dot.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        const menu =
+            dot.parentElement.querySelector(".menu");
+
+        if (menu.style.display === "block") {
+
+            menu.style.display = "none";
+
+        } else {
+
+            menu.style.display = "block";
+
+        }
+
+    });
+
+});
+
+
+/* =========================
+   NEXT IMAGE
+========================= */
+
+nextBtn.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    currentIndex =
+        (currentIndex + 1) % images.length;
+
+    viewerImage.src =
+        images[currentIndex].src;
+
+    zoomLevel = 1;
+
+    viewerImage.style.transform =
+        "scale(1)";
+
+});
+
+
+/* =========================
+   PREVIOUS IMAGE
+========================= */
+
+prevBtn.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    currentIndex =
+        (currentIndex - 1 + images.length)
+        % images.length;
+
+    viewerImage.src =
+        images[currentIndex].src;
+
+    zoomLevel = 1;
+
+    viewerImage.style.transform =
+        "scale(1)";
+
+});
+
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+closeBtn.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    imageViewer.style.display = "none";
+
+    viewerMenu.style.display = "none";
+
+    zoomLevel = 1;
+
+    viewerImage.style.transform =
+        "scale(1)";
+
+});
+
+
+/* =========================
+   VIEWER 3 DOTS
+========================= */
+
+viewerDots.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    if (viewerMenu.style.display === "block") {
+
+        viewerMenu.style.display = "none";
+
+    } else {
+
+        viewerMenu.style.display = "block";
+
+    }
+
+});
+
+
+/* =========================
+   ZOOM IN
+========================= */
+
+zoomIn.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    if (zoomLevel < 3) {
+
+        zoomLevel += 0.25;
+
+        viewerImage.style.transform =
+            "scale(" + zoomLevel + ")";
+
+    }
+
+});
+
+
+/* =========================
+   ZOOM OUT
+========================= */
+
+zoomOut.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    if (zoomLevel > 1) {
+
+        zoomLevel -= 0.25;
+
+        viewerImage.style.transform =
+            "scale(" + zoomLevel + ")";
+
+    }
+
+});
+
+
+/* =========================
+   RESET ZOOM
+========================= */
+
+resetZoom.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    zoomLevel = 1;
+
+    viewerImage.style.transform =
+        "scale(1)";
+
+});
+
+
+/* =========================
+   SHARE THROUGH WHATSAPP
+========================= */
+
+document.getElementById("shareButton").addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    const imageLink = viewerImage.src;
+
+    const message =
+        "Check out this Birthday decoration:\n" +
+        imageLink;
+
+    window.open(
+        "https://wa.me/?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+});
+
+
+/* =========================
+   WHATSAPP BOOKING
+========================= */
+
+function whatsappBooking(event) {
+
+    event.stopPropagation();
+
+    const phone = "7093235437";
+
+    const imageLink = viewerImage.src;
+
+    const message =
+        "Hello, I am interested in this Birthday decoration.\n\n" +
+        "🖼️ Selected decoration:\n" +
+        imageLink +
+        "\n\n" +
+        "Please share the price and details.";
+
+    window.open(
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+}
+
+
+/* =========================
+   MOBILE SWIPE
+========================= */
+
+let startX = 0;
+
+
+imageViewer.addEventListener("touchstart", function(event) {
+
+    startX =
+        event.changedTouches[0].clientX;
+
+});
+
+
+imageViewer.addEventListener("touchend", function(event) {
+
+    const endX =
+        event.changedTouches[0].clientX;
+
+    const difference =
+        startX - endX;
+
+
+    /* LEFT = NEXT */
+
+    if (difference > 50) {
+
+        nextBtn.click();
+
+    }
+
+
+    /* RIGHT = PREVIOUS */
+
+    if (difference < -50) {
+
+        prevBtn.click();
+
+    }
+
+});
+
+
+/* =========================
+   OUTSIDE CLICK = CLOSE
+========================= */
+
+imageViewer.addEventListener("click", function(event) {
+
+    if (event.target === imageViewer) {
+
+        imageViewer.style.display = "none";
+
+        viewerMenu.style.display = "none";
+
+        zoomLevel = 1;
+
+        viewerImage.style.transform =
+            "scale(1)";
+
+    }
+
+});
+
+
+</script>
+```
+
+
+
+</body>
+
+</html>

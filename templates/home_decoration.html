@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Decoration</title>
+
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px;
+        }
+
+        .photo img {
+            width: 300px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🏠 Home Decoration</h1>
+    <p>Our Home Decoration Collection</p>
+
+    <div class="gallery">
+
+        {% for decoration in decorations %}
+        <div class="photo">
+            <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

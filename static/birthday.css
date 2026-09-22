@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff5fa;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 30px;
+    color: #d63384;
+}
+
+p {
+    font-size: 18px;
+    color: #555;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 30px;
+}
+
+.gallery img {
+    width: 300px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.gallery img:hover {
+    transform: scale(1.03);
+}
+
+@media (max-width: 600px) {
+
+    .gallery {
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .gallery img {
+        width: 160px;
+        height: 140px;
+    }
+
+}

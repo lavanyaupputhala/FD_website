@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Wedding Decoration</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fff5fa;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+
+        /* GALLERY */
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px;
+        }
+
+        .photo {
+            position: relative;
+            width: 300px;
+            height: 250px;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+
+        /* 3 DOTS ON IMAGE */
+
+        .dots {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            z-index: 5;
+
+            text-shadow: 0 2px 5px black;
+        }
+
+
+        /* IMAGE MENU */
+
+        .menu {
+            display: none;
+
+            position: absolute;
+            top: 42px;
+            right: 5px;
+
+            background: white;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            z-index: 20;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .menu button {
+            border: none;
+
+            background: #ff69b4;
+
+            color: white;
+
+            padding: 12px 18px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           FULL SCREEN VIEWER
+        ========================= */
+
+        #viewer {
+
+            display: none;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0,0,0,0.95);
+
+            z-index: 9999;
+
+            align-items: center;
+            justify-content: center;
+
+        }
+
+
+        #bigImage {
+
+            max-width: 80%;
+            max-height: 80%;
+
+            object-fit: contain;
+
+        }
+        #zoomIn,
+#zoomOut {
+    position: absolute;
+    bottom: 30px;
+
+    background: white;
+    border: none;
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    z-index: 10002;
+}
+
+#zoomOut {
+    right: 80px;
+}
+
+#zoomIn {
+    right: 25px;
+}
+
+        /* PREVIOUS BUTTON */
+
+        #previous {
+
+            position: absolute;
+
+            left: 20px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            font-size: 45px;
+
+            cursor: pointer;
+
+            z-index: 10001;
+
+        }
+
+
+        /* NEXT BUTTON */
+
+        #next {
+
+            position: absolute;
+
+            right: 20px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            font-size: 45px;
+
+            cursor: pointer;
+
+            z-index: 10001;
+
+        }
+
+
+        /* CLOSE BUTTON */
+
+        #close {
+
+            position: absolute;
+
+            right: 20px;
+            top: 15px;
+
+            background: none;
+
+            border: none;
+
+            color: white;
+
+            font-size: 32px;
+
+            cursor: pointer;
+
+            z-index: 10002;
+
+        }
+
+
+        /* VIEWER 3 DOTS */
+
+        #viewerDots {
+
+            position: absolute;
+
+            right: 70px;
+            top: 10px;
+
+            color: white;
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            z-index: 10002;
+
+        }
+
+
+        /* VIEWER MENU */
+
+        #viewerMenu {
+
+            display: none;
+
+            position: absolute;
+
+            right: 55px;
+            top: 55px;
+
+            background: white;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            z-index: 10003;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+
+        }
+
+
+        #viewerMenu button {
+
+            border: none;
+
+            background: #ff69b4;
+
+            color: white;
+
+            padding: 12px 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            white-space: nowrap;
+
+        }
+
+
+        /* MOBILE */
+
+        @media(max-width:600px) {
+
+            .photo {
+                width: 160px;
+                height: 140px;
+            }
+
+            #bigImage {
+                max-width: 90%;
+                max-height: 80%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<h1>💍 Wedding Decoration</h1>
+
+<p>Our Wedding Decoration Collection</p>
+
+
+<!-- =========================
+     GALLERY
+========================= -->
+
+<div class="gallery">
+    {% for decoration in decorations %}
+
+    <div class="photo">
+
+      <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+        <div class="dots">⋮</div>
+
+        <div class="menu">
+
+    <button onclick="shareImage(this.closest('.photo').querySelector('img').src)">
+        🔗 Share
+    </button>
+
+    <button onclick="whatsappBooking(this.closest('.photo').querySelector('img').src)">
+        📱 WhatsApp Booking
+    </button>
+
+</div>
+    </div>
+
+{% endfor %}
+
+
+    <div class="photo">
+
+        <img src="{{ url_for('static', filename='images/wedding (1).jpeg') }}">
+
+        <div class="dots">⋮</div>
+
+        <div class="menu">
+
+            <button onclick="whatsappBooking(this.closest('.photo').querySelector('img').src)">
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="photo">
+
+        <img src="{{ url_for('static', filename='images/wedding (2).jpeg') }}">
+
+        <div class="dots">⋮</div>
+
+        <div class="menu">
+
+            <button onclick="whatsappBooking(this.closest('.photo').querySelector('img').src)">
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="photo">
+
+        <img src="{{ url_for('static', filename='images/wedding (3).jpeg') }}">
+
+        <div class="dots">⋮</div>
+
+        <div class="menu">
+
+            <button onclick="whatsappBooking(this.closest('.photo').querySelector('img').src)">
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="photo">
+
+        <img src="{{ url_for('static', filename='images/wedding (4).jpeg') }}">
+
+        <div class="dots">⋮</div>
+
+        <div class="menu">
+
+            <button onclick="whatsappBooking(this.parentElement.parentElement.querySelector('img').src)">
+    WhatsApp Booking
+</button>
+
+        </div>
+
+    </div>
+
+
+    <!-- 5 TO 68 -->
+
+    <script>
+
+        for (let i = 5; i <= 68; i++) {
+
+            document.write(`
+                <div class="photo">
+
+                    <img src="/static/images/wedding  (${i}).jpeg">
+
+                    <div class="dots">⋮</div>
+
+                    <div class="menu">
+
+                        <button onclick="whatsappBooking(this.closest('.photo').querySelector('img').src)">
+                        </button>
+
+                    </div>
+
+                </div>
+            `);
+
+        }
+
+    </script>
+
+
+</div>
+
+
+<!-- =========================
+     FULL SCREEN VIEWER
+========================= -->
+
+<div id="viewer">
+
+
+    <!-- PREVIOUS -->
+
+    <button id="previous">
+        ❮
+    </button>
+
+
+    <!-- IMAGE -->
+
+    <img id="bigImage">
+
+
+    <!-- NEXT -->
+
+    <button id="next">
+        ❯
+    </button>
+
+
+    <!-- CLOSE -->
+
+    <button id="close">
+        ✕
+    </button>
+
+
+    <!-- 3 DOTS -->
+
+    <div id="viewerDots">
+        ⋮
+    </div>
+
+
+    <!-- MENU -->
+
+   ```html
+<div id="viewerMenu">
+
+    <button id="zoomIn">
+        🔍 Zoom In
+    </button>
+
+    <button id="zoomOut">
+        🔎 Zoom Out
+    </button>
+
+    <button id="resetZoom">
+        ↺ Reset Zoom
+    </button>
+
+    <button id="shareButton">
+        🔗 Share
+    </button>
+
+    <button id="bookingButton">
+        📱 WhatsApp Booking
+    </button>
+
+</div>
+```
+
+
+</div>
+
+
+```html
+<script>
+
+
+/* =========================
+   GET ELEMENTS
+========================= */
+
+const images =
+    document.querySelectorAll(".photo img");
+
+const viewer =
+    document.getElementById("viewer");
+
+const bigImage =
+    document.getElementById("bigImage");
+
+const previous =
+    document.getElementById("previous");
+
+const next =
+    document.getElementById("next");
+
+const close =
+    document.getElementById("close");
+
+const viewerDots =
+    document.getElementById("viewerDots");
+
+const viewerMenu =
+    document.getElementById("viewerMenu");
+
+const zoomIn =
+    document.getElementById("zoomIn");
+
+const zoomOut =
+    document.getElementById("zoomOut");
+
+const resetZoomButton =
+    document.getElementById("resetZoom");
+
+
+let currentIndex = 0;
+
+let zoomLevel = 1;
+
+
+/* =========================
+   RESET ZOOM
+========================= */
+
+function resetZoom() {
+
+    zoomLevel = 1;
+
+    bigImage.style.transform =
+        "scale(1)";
+
+}
+
+
+/* =========================
+   ZOOM IN
+========================= */
+
+zoomIn.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    zoomLevel += 0.2;
+
+    if (zoomLevel > 3) {
+
+        zoomLevel = 3;
+
+    }
+
+    bigImage.style.transform =
+        `scale(${zoomLevel})`;
+
+});
+
+
+/* =========================
+   ZOOM OUT
+========================= */
+
+zoomOut.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    zoomLevel -= 0.2;
+
+    if (zoomLevel < 1) {
+
+        zoomLevel = 1;
+
+    }
+
+    bigImage.style.transform =
+        `scale(${zoomLevel})`;
+
+});
+
+
+/* =========================
+   RESET ZOOM BUTTON
+========================= */
+
+resetZoomButton.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    resetZoom();
+
+});
+
+
+/* =========================
+   IMAGE CLICK
+========================= */
+
+images.forEach(function(image, index) {
+
+    image.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        currentIndex = index;
+
+        bigImage.src =
+            image.src;
+
+        resetZoom();
+
+        viewer.style.display =
+            "flex";
+
+        viewerMenu.style.display =
+            "none";
+
+    });
+
+});
+
+
+/* =========================
+   3 DOTS ON GALLERY IMAGE
+========================= */
+
+document.querySelectorAll(".dots")
+.forEach(function(dot) {
+
+    dot.addEventListener("click", function(event) {
+
+        event.stopPropagation();
+
+        const menu =
+            dot.parentElement.querySelector(".menu");
+
+        if (menu.style.display === "block") {
+
+            menu.style.display =
+                "none";
+
+        } else {
+
+            menu.style.display =
+                "block";
+
+        }
+
+    });
+
+});
+
+
+/* =========================
+   NEXT IMAGE
+========================= */
+
+next.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    currentIndex++;
+
+    if (currentIndex >= images.length) {
+
+        currentIndex = 0;
+
+    }
+
+    bigImage.src =
+        images[currentIndex].src;
+
+    resetZoom();
+
+});
+
+
+/* =========================
+   PREVIOUS IMAGE
+========================= */
+
+previous.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    currentIndex--;
+
+    if (currentIndex < 0) {
+
+        currentIndex =
+            images.length - 1;
+
+    }
+
+    bigImage.src =
+        images[currentIndex].src;
+
+    resetZoom();
+
+});
+
+
+/* =========================
+   CLOSE
+========================= */
+
+close.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    viewer.style.display =
+        "none";
+
+    viewerMenu.style.display =
+        "none";
+
+    resetZoom();
+
+});
+
+
+/* =========================
+   VIEWER 3 DOTS
+========================= */
+
+viewerDots.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    if (viewerMenu.style.display === "block") {
+
+        viewerMenu.style.display =
+            "none";
+
+    } else {
+
+        viewerMenu.style.display =
+            "block";
+
+    }
+
+});
+
+
+/* =========================
+   WHATSAPP BOOKING
+========================= */
+
+function whatsappBooking() {
+
+    const phone =
+        "7093235437";
+
+    const imageUrl =
+        bigImage.src;
+
+    const message =
+        "Hello, I am interested in this Wedding decoration.\n\n" +
+        "🖼️ Selected decoration:\n" +
+        imageUrl +
+        "\n\nPlease share the price and details.";
+
+    window.open(
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+}
+
+
+/* =========================
+   SHARE THROUGH WHATSAPP
+========================= */
+
+function shareImage(imageUrl) {
+
+    if (!imageUrl) {
+
+        imageUrl =
+            bigImage.src;
+
+    }
+
+    const message =
+        "Check out this Wedding decoration:\n" +
+        imageUrl;
+
+    window.open(
+        "https://wa.me/?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+}
+
+
+/* =========================
+   BUTTON ACTIONS
+========================= */
+
+document
+.getElementById("bookingButton")
+.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    whatsappBooking();
+
+});
+
+
+document
+.getElementById("shareButton")
+.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    shareImage();
+
+});
+
+
+/* =========================
+   MOBILE SWIPE
+========================= */
+
+let startX = 0;
+
+
+viewer.addEventListener("touchstart", function(event) {
+
+    startX =
+        event.changedTouches[0].clientX;
+
+});
+
+
+viewer.addEventListener("touchend", function(event) {
+
+    const endX =
+        event.changedTouches[0].clientX;
+
+    const difference =
+        startX - endX;
+
+
+    /* LEFT SWIPE = NEXT */
+
+    if (difference > 50) {
+
+        next.click();
+
+    }
+
+
+    /* RIGHT SWIPE = PREVIOUS */
+
+    if (difference < -50) {
+
+        previous.click();
+
+    }
+
+});
+
+
+/* =========================
+   CLICK OUTSIDE TO CLOSE
+========================= */
+
+viewer.addEventListener("click", function(event) {
+
+    if (event.target === viewer) {
+
+        viewer.style.display =
+            "none";
+
+        viewerMenu.style.display =
+            "none";
+
+        resetZoom();
+
+    }
+
+});
+
+
+</script>
+```
+
+
+</body>
+
+</html>

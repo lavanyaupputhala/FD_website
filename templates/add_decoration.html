@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Decoration</title>
+</head>
+
+<body>
+
+    <h1>➕ Add Decoration</h1>
+
+    <form method="POST" action="/add-decoration" enctype="multipart/form-data">
+
+        <label>Choose Category:</label>
+
+        <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="Haldi">🌼 Haldi</option>
+            <option value="Wedding">💍 Wedding</option>
+            <option value="Home Decoration">🏠 Home Decoration</option>
+            <option value="Birthday">🎂 Birthday</option>
+        </select>
+
+        <br><br>
+
+        <label>Select Image:</label>
+
+        <input type="file"
+               name="image"
+               accept="image/*"
+               required>
+
+        <br><br>
+
+        <button type="submit">Add Decoration</button>
+
+    </form>
+
+    <br>
+
+    <a href="/owner">⬅ Back to Dashboard</a>
+
+</body>
+
+</html>

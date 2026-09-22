@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Decoration</title>
+</head>
+
+<body>
+
+    <h1>✏️ Edit Decoration</h1>
+
+    <p>
+        <strong>Current Category:</strong>
+        {{ decoration["category"] }}
+    </p>
+
+    <p>
+        <strong>Current Image:</strong>
+        {{ decoration["image"] }}
+    </p>
+
+    <hr>
+
+    <h3>Edit Category</h3>
+
+    <form method="POST" action="/edit-decoration/{{ decoration['id'] }}">
+
+        <label>Choose New Category:</label>
+
+        <select name="category">
+            <option value="Haldi">🌼 Haldi</option>
+            <option value="Wedding">💍 Wedding</option>
+            <option value="Home Decoration">🏠 Home Decoration</option>
+            <option value="Birthday">🎂 Birthday</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
+    <br>
+
+    <a href="/edit-decoration">
+        ⬅ Back to Edit Decorations
+    </a>
+
+</body>
+
+</html>

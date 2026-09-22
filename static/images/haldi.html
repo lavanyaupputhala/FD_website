@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Haldi Decoration</title>
+    <link rel="stylesheet" href="../static/style.css">
+
+    <style>
+        .gallery img {
+            width: 300px;
+            height: 250px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🌼 Haldi & Pooja Decoration</h1>
+
+<p>Our Haldi & Pooja Decoration Collection</p>
+
+<div class="gallery" style="display:flex; flex-wrap:wrap; gap:20px;">
+
+<img src="{{ url_for('static', filename='images/haldi (1).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (2).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (3).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (4).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (6).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (7).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (8).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (9).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (10).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (11).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (12).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (13).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (14).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (15).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (16).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (17).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (18).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (19).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (20).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (21).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (22).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (23).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (24).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (25).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (26).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (27).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (28).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (29).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (30).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (31).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (32).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (33).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (34).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (35).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (36).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (37).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (38).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (39).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (40).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (41).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (42).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (43).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (44).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (45).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (46).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (47).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (48).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (49).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (50).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (51).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (52).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (53).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (54).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (55).jpeg') }}">
+<img src="{{ url_for('static', filename='images/haldi (56).jpeg') }}">
+
+</div>
+
+<!-- IMAGE VIEWER -->
+
+<div id="viewer" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+z-index:9999;
+align-items:center;
+justify-content:center;
+">
+
+<button id="previous" style="
+position:absolute;
+left:20px;
+top:50%;
+font-size:40px;
+background:none;
+border:none;
+color:white;
+">❮</button>
+
+<img id="bigImage" style="
+max-width:85%;
+max-height:85%;
+">
+
+<button id="next" style="
+position:absolute;
+right:20px;
+top:50%;
+font-size:40px;
+background:none;
+border:none;
+color:white;
+">❯</button>
+
+<button id="close" style="
+position:absolute;
+right:20px;
+top:10px;
+font-size:30px;
+background:none;
+border:none;
+color:white;
+">✕</button>
+
+<div id="threeDots" style="
+position:absolute;
+right:70px;
+top:10px;
+font-size:32px;
+color:white;
+cursor:pointer;
+">⋮</div>
+
+<button id="book" style="
+display:none;
+position:absolute;
+right:60px;
+top:55px;
+">WhatsApp Booking</button>
+
+</div>
+
+<script>
+
+const images = document.querySelectorAll(".gallery img");
+
+const viewer = document.getElementById("viewer");
+const bigImage = document.getElementById("bigImage");
+
+const previous = document.getElementById("previous");
+const next = document.getElementById("next");
+const close = document.getElementById("close");
+
+const threeDots = document.getElementById("threeDots");
+const book = document.getElementById("book");
+
+let current = 0;
+
+/* OPEN IMAGE */
+
+images.forEach((image, index) => {
+
+    image.style.cursor = "pointer";
+
+    image.onclick = function() {
+
+        current = index;
+
+        bigImage.src = images[current].src;
+
+        viewer.style.display = "flex";
+    };
+
+});
+
+/* NEXT */
+
+next.onclick = function() {
+
+    current++;
+
+    if (current >= images.length) {
+        current = 0;
+    }
+
+    bigImage.src = images[current].src;
+};
+
+/* PREVIOUS */
+
+previous.onclick = function() {
+
+    current--;
+
+    if (current < 0) {
+        current = images.length - 1;
+    }
+
+    bigImage.src = images[current].src;
+};
+
+/* CLOSE */
+
+close.onclick = function() {
+
+    viewer.style.display = "none";
+
+};
+
+/* 3 DOTS */
+
+threeDots.onclick = function() {
+
+    if (book.style.display === "none") {
+        book.style.display = "block";
+    } else {
+        book.style.display = "none";
+    }
+
+};
+
+/* WHATSAPP */
+
+book.onclick = function() {
+
+    const message =
+    "Hello, I am interested in this Haldi decoration. Please share the price and details.";
+
+    const ownerNumber = "7093235437";
+
+    window.open(
+        "https://wa.me/" +
+        ownerNumber +
+        "?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+};
+
+/* SWIPE */
+
+let startX = 0;
+
+viewer.addEventListener("touchstart", function(e) {
+
+    startX = e.touches[0].clientX;
+
+});
+
+viewer.addEventListener("touchend", function(e) {
+
+    let endX = e.changedTouches[0].clientX;
+
+    if (startX - endX > 50) {
+        next.click();
+    }
+
+    if (endX - startX > 50) {
+        previous.click();
+    }
+
+});
+
+</script>
+
+</body>
+</html>

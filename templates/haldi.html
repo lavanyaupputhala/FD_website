@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Haldi Decoration</title>
+
+```
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        padding: 20px;
+    }
+
+    .gallery img {
+        width: 300px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    /* FULL SCREEN VIEWER */
+
+    #viewer {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+   #bigImage {
+
+    max-width: 80%;
+    max-height: 80%;
+
+    object-fit: contain;
+
+}
+
+#zoomIn,
+#zoomOut {
+    position: absolute;
+    bottom: 30px;
+
+    background: white;
+    border: none;
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    z-index: 10002;
+}
+
+#zoomOut {
+    right: 80px;
+}
+
+#zoomIn {
+    right: 25px;
+}
+    /* PREVIOUS */
+
+    #previous {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 45px;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        z-index: 10001;
+    }
+
+    /* NEXT */
+
+    #next {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 45px;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        z-index: 10001;
+    }
+
+    /* CLOSE */
+
+    #close {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 32px;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        z-index: 10002;
+    }
+
+    /* THREE DOTS */
+
+    #threeDots {
+        position: absolute;
+        right: 70px;
+        top: 10px;
+        font-size: 32px;
+        color: white;
+        cursor: pointer;
+        z-index: 10002;
+    }
+
+    /* VIEWER MENU */
+
+    #viewerMenu {
+        display: none;
+        position: absolute;
+        right: 55px;
+        top: 55px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        z-index: 10003;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #viewerMenu button {
+        display: block;
+        width: 180px;
+        border: none;
+        background: white;
+        color: black;
+        padding: 13px 18px;
+        text-align: left;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #viewerMenu button:hover {
+        background: #f5f5f5;
+    }
+
+    @media (max-width: 600px) {
+
+        .gallery img {
+            width: 160px;
+            height: 140px;
+        }
+
+        #bigImage {
+            max-width: 90%;
+            max-height: 80%;
+        }
+
+        #viewerMenu {
+            right: 45px;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<h1>🌼 Haldi & Pooja Decoration</h1>
+
+<p>Our Haldi & Pooja Decoration Collection</p>
+
+<div class="gallery">
+
+```
+<!-- FIXED HALDI IMAGES -->
+
+<img src="{{ url_for('static', filename='images/haldi (1).jpeg') }}">
+
+<img src="{{ url_for('static', filename='images/haldi2.jpeg') }}">
+
+{% for i in range(3, 56) %}
+    <img src="{{ url_for('static', filename='images/haldi (' ~ i ~ ').jpeg') }}">
+{% endfor %}
+
+
+<!-- OWNER ADDED HALDI IMAGES -->
+
+{% for decoration in decorations %}
+    <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+{% endfor %}
+```
+
+</div>
+
+<!-- FULL SCREEN VIEWER -->
+
+<div id="viewer">
+
+```
+<button id="previous">
+    ❮
+</button>
+
+<img id="bigImage">
+
+<button id="next">
+    ❯
+</button>
+
+<button id="close">
+    ✕
+</button>
+<button id="zoomOut">−</button>
+<button id="zoomIn">+</button>
+<div id="threeDots">
+    ⋮
+</div>
+
+
+<!-- TWO OPTIONS -->
+
+<div id="viewerMenu">
+
+    <button id="share">
+        🔗 Share
+    </button>
+
+    <button id="book">
+        📱 WhatsApp Booking
+    </button>
+
+</div>
+```
+
+</div>
+
+<script>
+
+const images =
+    document.querySelectorAll(".gallery img");
+
+const viewer =
+    document.getElementById("viewer");
+
+const bigImage =
+    document.getElementById("bigImage");
+
+const previous =
+    document.getElementById("previous");
+
+const next =
+    document.getElementById("next");
+
+const close =
+    document.getElementById("close");
+
+const threeDots =
+    document.getElementById("threeDots");
+
+const viewerMenu =
+    document.getElementById("viewerMenu");
+
+const share =
+    document.getElementById("share");
+
+const book =
+    document.getElementById("book");
+
+
+let current = 0;
+const zoomIn = document.getElementById("zoomIn");
+const zoomOut = document.getElementById("zoomOut");
+
+let zoomLevel = 1;
+
+function resetZoom() {
+    zoomLevel = 1;
+    bigImage.style.transform = "scale(1)";
+}
+
+zoomIn.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    zoomLevel += 0.2;
+
+    if (zoomLevel > 3) {
+        zoomLevel = 3;
+    }
+
+    bigImage.style.transform = `scale(${zoomLevel})`;
+});
+
+zoomOut.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    zoomLevel -= 0.2;
+
+    if (zoomLevel < 1) {
+        zoomLevel = 1;
+    }
+
+    bigImage.style.transform = `scale(${zoomLevel})`;
+});
+
+/* =========================
+   OPEN IMAGE
+========================= */
+
+images.forEach(function(image, index) {
+
+    image.addEventListener("click", function() {
+
+        current = index;
+
+        bigImage.src = image.src;
+        resetZoom();
+
+        viewer.style.display = "flex";
+
+        viewerMenu.style.display = "none";
+
+    });
+
+});
+
+
+/* =========================
+   NEXT IMAGE
+========================= */
+
+next.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    current++;
+
+    if (current >= images.length) {
+        current = 0;
+    }
+
+    bigImage.src = images[current].src;
+    resetZoom();
+});
+
+
+/* =========================
+   PREVIOUS IMAGE
+========================= */
+
+previous.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    current--;
+
+    if (current < 0) {
+        current = images.length - 1;
+    }
+
+    bigImage.src = images[current].src;
+
+});
+
+
+/* =========================
+   CLOSE
+========================= */
+
+close.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    viewer.style.display = "none";
+
+    viewerMenu.style.display = "none";
+
+});
+
+
+/* =========================
+   THREE DOTS
+========================= */
+
+threeDots.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    if (viewerMenu.style.display === "block") {
+
+        viewerMenu.style.display = "none";
+
+    } else {
+
+        viewerMenu.style.display = "block";
+
+    }
+
+});
+
+
+/* =========================
+   WHATSAPP BOOKING
+========================= */
+
+book.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    const imageLink = bigImage.src;
+
+    const ownerNumber = "7093235437";
+
+    const message =
+        "Hello, I am interested in this Haldi decoration.\n\n" +
+        "Please check the selected decoration:\n" +
+        imageLink +
+        "\n\n" +
+        "Please share the price and details.";
+
+    window.open(
+        "https://wa.me/" +
+        ownerNumber +
+        "?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+});
+
+
+/* =========================
+   SHARE THROUGH WHATSAPP
+========================= */
+
+share.addEventListener("click", function(event) {
+
+    event.stopPropagation();
+
+    const imageLink = bigImage.src;
+
+    const message =
+        "Check out this Haldi decoration:\n" +
+        imageLink;
+
+    window.open(
+        "https://wa.me/?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+});
+
+
+/* =========================
+   MOBILE SWIPE
+========================= */
+
+let startX = 0;
+
+viewer.addEventListener("touchstart", function(event) {
+
+    startX =
+        event.changedTouches[0].clientX;
+
+});
+
+
+viewer.addEventListener("touchend", function(event) {
+
+    const endX =
+        event.changedTouches[0].clientX;
+
+    const difference =
+        startX - endX;
+
+
+    if (difference > 50) {
+
+        next.click();
+
+    }
+
+
+    if (difference < -50) {
+
+        previous.click();
+
+    }
+
+});
+
+
+/* =========================
+   CLICK OUTSIDE = CLOSE
+========================= */
+
+viewer.addEventListener("click", function(event) {
+
+    if (event.target === viewer) {
+
+        viewer.style.display = "none";
+
+        viewerMenu.style.display = "none";
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>

@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Birthday Decoration</title>
 
@@ -92,12 +93,11 @@
             justify-content: center;
         }
 
-        #viewerImage {
-            max-width: 85%;
-            max-height: 85%;
-            object-fit: contain;
-        }
-
+    #viewerImage {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    }
         /* =========================
            PREVIOUS
         ========================= */
@@ -155,7 +155,7 @@
         #viewerDots {
             position: absolute;
             top: 10px;
-            right: 70px;
+            right: 120px;
             font-size: 32px;
             color: white;
             font-weight: bold;
@@ -205,7 +205,7 @@
             }
 
             #viewerImage {
-                max-width: 90%;
+                max-width: 80%;
                 max-height: 80%;
             }
 
@@ -434,74 +434,43 @@
 <!-- =========================
      FULL SCREEN IMAGE VIEWER
 ========================= -->
-
 <div id="imageViewer">
-
 
     <button id="prevBtn">
         ❮
     </button>
 
-
     <img id="viewerImage">
-
 
     <button id="nextBtn">
         ❯
     </button>
 
-
     <button id="closeBtn">
         ✕
     </button>
-
-
-    <!-- 3 DOTS AFTER IMAGE OPENS -->
 
     <div id="viewerDots">
         ⋮
     </div>
 
+    <div id="viewerMenu">
 
-    <!-- WHATSAPP OPTION -->
+        <button id="resetZoom">
+            ↺ Reset Zoom
+        </button>
 
-    ```html
-<div id="viewerMenu">
+        <button id="shareButton">
+            🔗 Share
+        </button>
 
-    <button id="zoomIn">
-        🔍 Zoom In
-    </button>
-
-    <button id="zoomOut">
-        🔎 Zoom Out
-    </button>
-
-    <button id="resetZoom">
-        ↺ Reset Zoom
-    </button>
-
-    <button id="shareButton">
-        🔗 Share
-    </button>
-
-    <button id="bookingButton" onclick="whatsappBooking(event)">
-        📱 WhatsApp Booking
-    </button>
-
-</div>
-```
-
-
-        <button onclick="whatsappBooking(event)">
-            WhatsApp Booking
+        <button id="bookingButton" onclick="whatsappBooking(event)">
+            📱 WhatsApp Booking
         </button>
 
     </div>
 
-
 </div>
-
-```html
 <script>
 
 

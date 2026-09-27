@@ -46,13 +46,15 @@
         justify-content: center;
     }
 
-   #bigImage {
-
-    max-width: 100%;
-    max-height: 100%;
-
+  #bigImage {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
     object-fit: contain;
-
+    touch-action: none;
+user-select: none;
+-webkit-user-select: none;
 }
 
 #zoomIn,
@@ -113,32 +115,34 @@
         z-index: 10001;
     }
 
-    /* CLOSE */
+   /* CLOSE */
 
-    #close {
-        position: absolute;
-        right: 20px;
-        top: 10px;
-        font-size: 32px;
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        z-index: 10002;
-    }
-
+#close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 48px;
+    line-height: 1;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    z-index: 10002;
+    padding: 8px;
+}
     /* THREE DOTS */
 
-    #threeDots {
-        position: absolute;
-        right: 120px;
-        top: 10px;
-        font-size: 32px;
-        color: white;
-        cursor: pointer;
-        z-index: 10002;
-    }
-
+#threeDots {
+    position: absolute;
+    right: 85px;
+    top: 8px;
+    font-size: 48px;
+    line-height: 1;
+    color: white;
+    cursor: pointer;
+    z-index: 10002;
+    padding: 8px;
+}
     /* VIEWER MENU */
 
     #viewerMenu {
@@ -153,17 +157,18 @@
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
     }
 
-    #viewerMenu button {
-        display: block;
-        width: 180px;
-        border: none;
-        background: white;
-        color: black;
-        padding: 13px 18px;
-        text-align: left;
-        cursor: pointer;
-        font-weight: bold;
-    }
+   #viewerMenu button {
+    display: block;
+    width: 200px;
+    border: none;
+    background: white;
+    color: black;
+    padding: 15px 20px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
 
     #viewerMenu button:hover {
         background: #f5f5f5;
@@ -192,7 +197,7 @@
 
 <body>
 
-<h1>🌼 Haldi & Pooja Decoration</h1>
+<h2>🌼 Haldi & Pooja Decoration</h2>
 
 <p>Our Haldi & Pooja Decoration Collection</p>
 
@@ -237,9 +242,7 @@
 <button id="close">
     ✕
 </button>
-<button id="zoomOut">−</button>
-<button id="zoomIn">+</button>
-<div id="threeDots">
+    <div id="threeDots">
     ⋮
 </div>
 
@@ -260,76 +263,172 @@
 ```
 
 </div>
-
 <script>
 
-const images =
-    document.querySelectorAll(".gallery img");
+const images = document.querySelectorAll(".gallery img");
 
-const viewer =
-    document.getElementById("viewer");
-
-const bigImage =
-    document.getElementById("bigImage");
-
-const previous =
-    document.getElementById("previous");
-
-const next =
-    document.getElementById("next");
-
-const close =
-    document.getElementById("close");
-
-const threeDots =
-    document.getElementById("threeDots");
-
-const viewerMenu =
-    document.getElementById("viewerMenu");
-
-const share =
-    document.getElementById("share");
-
-const book =
-    document.getElementById("book");
-
+const viewer = document.getElementById("viewer");
+const bigImage = document.getElementById("bigImage");
+const previous = document.getElementById("previous");
+const next = document.getElementById("next");
+const close = document.getElementById("close");
+const threeDots = document.getElementById("threeDots");
+const viewerMenu = document.getElementById("viewerMenu");
+const share = document.getElementById("share");
+const book = document.getElementById("book");
 
 let current = 0;
-const zoomIn = document.getElementById("zoomIn");
-const zoomOut = document.getElementById("zoomOut");
+
+/* =========================
+   ZOOM + IMAGE MOVE
+========================= */
 
 let zoomLevel = 1;
+let translateX = 0;
+let translateY = 0;
 
-function resetZoom() {
-    zoomLevel = 1;
-    bigImage.style.transform = "scale(1)";
+function updateImageTransform() {
+
+    bigImage.style.transform =
+        `translate(${translateX}px, ${translateY}px) scale(${zoomLevel})`;
+
 }
 
-zoomIn.addEventListener("click", function(event) {
+function resetZoom() {
+
+    zoomLevel = 1;
+    translateX = 0;
+    translateY = 0;
+
+    updateImageTransform();
+
+}
+
+
+/* =========================
+   PINCH ZOOM + DRAG
+========================= */
+
+let startDistance = 0;
+let startZoom = 1;
+
+let isDragging = false;
+
+let imageStartX = 0;
+let imageStartY = 0;
+
+let startTranslateX = 0;
+let startTranslateY = 0;
+
+
+/* TOUCH START */
+
+bigImage.addEventListener("touchstart", function(event) {
 
     event.stopPropagation();
 
-    zoomLevel += 0.2;
+    if (event.touches.length === 2) {
 
-    if (zoomLevel > 3) {
-        zoomLevel = 3;
+        startDistance = Math.hypot(
+            event.touches[0].clientX - event.touches[1].clientX,
+            event.touches[0].clientY - event.touches[1].clientY
+        );
+
+        startZoom = zoomLevel;
+
+        isDragging = false;
+
     }
 
-    bigImage.style.transform = `scale(${zoomLevel})`;
+    else if (
+        event.touches.length === 1 &&
+        zoomLevel > 1
+    ) {
+
+        isDragging = true;
+
+        imageStartX = event.touches[0].clientX;
+        imageStartY = event.touches[0].clientY;
+
+        startTranslateX = translateX;
+        startTranslateY = translateY;
+
+    }
+
 });
 
-zoomOut.addEventListener("click", function(event) {
+
+/* TOUCH MOVE */
+
+bigImage.addEventListener("touchmove", function(event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    /* PINCH ZOOM */
+
+    if (event.touches.length === 2) {
+
+        const currentDistance = Math.hypot(
+            event.touches[0].clientX - event.touches[1].clientX,
+            event.touches[0].clientY - event.touches[1].clientY
+        );
+
+        const scaleChange =
+            currentDistance / startDistance;
+
+        zoomLevel =
+            startZoom * scaleChange;
+
+        if (zoomLevel < 1) {
+            zoomLevel = 1;
+        }
+
+        if (zoomLevel > 4) {
+            zoomLevel = 4;
+        }
+
+        updateImageTransform();
+
+    }
+
+    /* MOVE IMAGE */
+
+    else if (
+        event.touches.length === 1 &&
+        isDragging &&
+        zoomLevel > 1
+    ) {
+
+        translateX =
+            startTranslateX +
+            (event.touches[0].clientX - imageStartX);
+
+        translateY =
+            startTranslateY +
+            (event.touches[0].clientY - imageStartY);
+
+        updateImageTransform();
+
+    }
+
+});
+
+
+/* TOUCH END */
+
+bigImage.addEventListener("touchend", function(event) {
 
     event.stopPropagation();
 
-    zoomLevel -= 0.2;
+    if (event.touches.length === 0) {
 
-    if (zoomLevel < 1) {
-        zoomLevel = 1;
+        isDragging = false;
+
     }
 
-    bigImage.style.transform = `scale(${zoomLevel})`;
 });
+
 
 /* =========================
    OPEN IMAGE
@@ -337,11 +436,14 @@ zoomOut.addEventListener("click", function(event) {
 
 images.forEach(function(image, index) {
 
-    image.addEventListener("click", function() {
+    image.addEventListener("click", function(event) {
+
+        event.stopPropagation();
 
         current = index;
 
         bigImage.src = image.src;
+
         resetZoom();
 
         viewer.style.display = "flex";
@@ -364,11 +466,15 @@ next.addEventListener("click", function(event) {
     current++;
 
     if (current >= images.length) {
+
         current = 0;
+
     }
 
     bigImage.src = images[current].src;
+
     resetZoom();
+
 });
 
 
@@ -383,10 +489,14 @@ previous.addEventListener("click", function(event) {
     current--;
 
     if (current < 0) {
+
         current = images.length - 1;
+
     }
 
     bigImage.src = images[current].src;
+
+    resetZoom();
 
 });
 
@@ -403,6 +513,8 @@ close.addEventListener("click", function(event) {
 
     viewerMenu.style.display = "none";
 
+    resetZoom();
+
 });
 
 
@@ -418,7 +530,9 @@ threeDots.addEventListener("click", function(event) {
 
         viewerMenu.style.display = "none";
 
-    } else {
+    }
+
+    else {
 
         viewerMenu.style.display = "block";
 
@@ -481,27 +595,55 @@ share.addEventListener("click", function(event) {
 
 
 /* =========================
+  /* =========================
    MOBILE SWIPE
 ========================= */
 
-let startX = 0;
+let swipeStartX = 0;
+let imageTouchActive = false;
 
 viewer.addEventListener("touchstart", function(event) {
 
-    startX =
-        event.changedTouches[0].clientX;
+    /* Ignore touches directly on the image */
+    if (event.target === bigImage) {
+
+        imageTouchActive = true;
+        return;
+
+    }
+
+    if (event.touches.length === 1) {
+
+        swipeStartX =
+            event.touches[0].clientX;
+
+        imageTouchActive = false;
+
+    }
 
 });
 
 
 viewer.addEventListener("touchend", function(event) {
 
+    /* Never treat image zoom/drag as swipe */
+    if (imageTouchActive) {
+
+        imageTouchActive = false;
+        return;
+
+    }
+
+    /* If image is zoomed, don't change image */
+    if (zoomLevel > 1) {
+        return;
+    }
+
     const endX =
         event.changedTouches[0].clientX;
 
     const difference =
-        startX - endX;
-
+        swipeStartX - endX;
 
     if (difference > 50) {
 
@@ -509,15 +651,13 @@ viewer.addEventListener("touchend", function(event) {
 
     }
 
-
-    if (difference < -50) {
+    else if (difference < -50) {
 
         previous.click();
 
     }
 
 });
-
 
 /* =========================
    CLICK OUTSIDE = CLOSE
@@ -531,12 +671,13 @@ viewer.addEventListener("click", function(event) {
 
         viewerMenu.style.display = "none";
 
+        resetZoom();
+
     }
 
 });
 
 </script>
-
 </body>
 
 </html>

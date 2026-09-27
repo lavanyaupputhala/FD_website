@@ -105,32 +105,34 @@ def owner():
 
 @app.route("/add-decoration", methods=["GET", "POST"])
 def add_decoration():
-
     if request.method == "GET":
         return render_template("add_decoration.html")
 
     category = request.form["category"]
-    image = request.files["image"]
-
-    image_path = "static/uploads/" + image.filename
-    image.save(image_path)
+    images = request.files.getlist("images")
 
     connection = get_db()
 
-    connection.execute(
-        "INSERT INTO decorations (category, image) VALUES (?, ?)",
-        (category, image.filename)
-    )
+    for image in images:
+
+        if image and image.filename:
+            image_path = "static/uploads/" + image.filename
+
+            image.save(image_path)
+
+            connection.execute(
+                "INSERT INTO decorations (category, image) VALUES (?, ?)",
+                (category, image.filename)
+            )
 
     connection.commit()
     connection.close()
 
-    return "Decoration added successfully!"
+    return "Decorations added successfully!"
 
 
 @app.route("/edit-decoration")
 def edit_decoration():
-
     connection = get_db()
 
     decorations = connection.execute(
@@ -147,11 +149,9 @@ def edit_decoration():
 
 @app.route("/edit-decoration/<int:id>", methods=["GET", "POST"])
 def edit_one_decoration(id):
-
     connection = get_db()
 
     if request.method == "POST":
-
         category = request.form["category"]
 
         connection.execute(
@@ -179,11 +179,9 @@ def edit_one_decoration(id):
 
 @app.route("/delete-decoration", methods=["GET", "POST"])
 def delete_decoration():
-
     connection = get_db()
 
     if request.method == "POST":
-
         decoration_id = request.form["decoration_id"]
 
         connection.execute(
@@ -210,7 +208,6 @@ def delete_decoration():
 
 @app.route("/delete-decoration/<int:id>")
 def delete_one_decoration(id):
-
     connection = get_db()
 
     decoration = connection.execute(
@@ -219,7 +216,6 @@ def delete_one_decoration(id):
     ).fetchone()
 
     if decoration:
-
         connection.execute(
             "DELETE FROM decorations WHERE id = ?",
             (id,)
@@ -231,12 +227,17 @@ def delete_one_decoration(id):
 
     return "Decoration deleted successfully!"
 
+
 @app.route("/owner-logout")
 def owner_logout():
-
     session.pop("owner_logged_in", None)
 
     return render_template("owner_login.html")
 
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )

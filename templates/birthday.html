@@ -422,8 +422,11 @@
     </div>
 {% for decoration in decorations %}
     <div class="photo">
-        <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
-
+      {% if decoration['image'].startswith('http') %}
+    <img src="{{ decoration['image'] }}">
+{% else %}
+    <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+{% endif %}
         <div class="dots">⋮</div>
 
         <div class="menu">

@@ -1,3 +1,15 @@
+from dotenv import load_dotenv
+import cloudinary
+import cloudinary.uploader
+import os
+load_dotenv()
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 from flask import Flask, render_template, request, session
 import sqlite3
 
@@ -70,7 +82,36 @@ def birthday():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+@app.route("/add-decoration", methods=["GET", "POST"])
+def add_decoration():
+    if request.method == "GET":
+        return render_template("add_decoration.html")
 
+    category = request.form["category"]
+    images = request.files.getlist("images")
+
+    connection = get_db()
+
+    for image in images:
+
+        if image and image.filename:
+
+            upload_result = cloudinary.uploader.upload(
+                image,
+                folder=f"decorations/{category}"
+            )
+
+            image_url = upload_result["secure_url"]
+
+            connection.execute(
+                "INSERT INTO decorations (category, image) VALUES (?, ?)",
+                (category, image_url)
+            )
+
+    connection.commit()
+    connection.close()
+
+    return "Decorations added successfully!"
 @app.route("/owner-login", methods=["GET", "POST"])
 def owner_login():
 
@@ -103,78 +144,14 @@ def owner():
     )
 
 
-@app.route("/add-decoration", methods=["GET", "POST"])
-def add_decoration():
-    if request.method == "GET":
-        return render_template("add_decoration.html")
+@app.route("/owner-logout")
+def owner_logout():
+    session.pop("owner_logged_in", None)
 
-    category = request.form["category"]
-    images = request.files.getlist("images")
-
-    connection = get_db()
-
-    for image in images:
-
-        if image and image.filename:
-            image_path = "static/uploads/" + image.filename
-
-            image.save(image_path)
-
-            connection.execute(
-                "INSERT INTO decorations (category, image) VALUES (?, ?)",
-                (category, image.filename)
-            )
-
-    connection.commit()
-    connection.close()
-
-    return "Decorations added successfully!"
+    return render_template("owner_login.html")
 
 
-@app.route("/edit-decoration")
-def edit_decoration():
-    connection = get_db()
 
-    decorations = connection.execute(
-        "SELECT * FROM decorations"
-    ).fetchall()
-
-    connection.close()
-
-    return render_template(
-        "edit_decoration.html",
-        decorations=decorations
-    )
-
-
-@app.route("/edit-decoration/<int:id>", methods=["GET", "POST"])
-def edit_one_decoration(id):
-    connection = get_db()
-
-    if request.method == "POST":
-        category = request.form["category"]
-
-        connection.execute(
-            "UPDATE decorations SET category = ? WHERE id = ?",
-            (category, id)
-        )
-
-        connection.commit()
-        connection.close()
-
-        return "Decoration updated successfully!"
-
-    decoration = connection.execute(
-        "SELECT * FROM decorations WHERE id = ?",
-        (id,)
-    ).fetchone()
-
-    connection.close()
-
-    return render_template(
-        "edit_one_decoration.html",
-        decoration=decoration
-    )
 
 
 @app.route("/delete-decoration", methods=["GET", "POST"])
@@ -182,12 +159,48 @@ def delete_decoration():
     connection = get_db()
 
     if request.method == "POST":
-        decoration_id = request.form["decoration_id"]
+        image_path = request.form.get("image_path", "").strip()
 
-        connection.execute(
-            "DELETE FROM decorations WHERE id = ?",
-            (decoration_id,)
-        )
+        if not image_path:
+            connection.close()
+            return "No image selected!"
+
+        if image_path.startswith("uploads/"):
+
+            filename = os.path.basename(image_path)
+
+            decoration = connection.execute(
+                "SELECT * FROM decorations WHERE image = ?",
+                (filename,)
+            ).fetchone()
+
+            file_path = os.path.join(
+                "static",
+                "uploads",
+                filename
+            )
+
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+            if decoration:
+                connection.execute(
+                    "DELETE FROM decorations WHERE id = ?",
+                    (decoration["id"],)
+                )
+
+        elif image_path.startswith("images/"):
+
+            filename = os.path.basename(image_path)
+
+            file_path = os.path.join(
+                "static",
+                "images",
+                filename
+            )
+
+            if os.path.exists(file_path):
+                os.remove(file_path)
 
         connection.commit()
         connection.close()
@@ -204,40 +217,8 @@ def delete_decoration():
         "delete_decoration.html",
         decorations=decorations
     )
-
-
-@app.route("/delete-decoration/<int:id>")
-def delete_one_decoration(id):
-    connection = get_db()
-
-    decoration = connection.execute(
-        "SELECT * FROM decorations WHERE id = ?",
-        (id,)
-    ).fetchone()
-
-    if decoration:
-        connection.execute(
-            "DELETE FROM decorations WHERE id = ?",
-            (id,)
-        )
-
-        connection.commit()
-
-    connection.close()
-
-    return "Decoration deleted successfully!"
-
-
-@app.route("/owner-logout")
-def owner_logout():
-    session.pop("owner_logged_in", None)
-
-    return render_template("owner_login.html")
-
-
-if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=True
-    )
+app.run(
+    host="0.0.0.0",
+    port=5000,
+    debug=False
+)

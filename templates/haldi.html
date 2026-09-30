@@ -215,13 +215,17 @@ user-select: none;
     <img src="{{ url_for('static', filename='images/haldi (' ~ i ~ ').jpeg') }}">
 {% endfor %}
 
-
 <!-- OWNER ADDED HALDI IMAGES -->
 
 {% for decoration in decorations %}
-    <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+
+    {% if decoration['image'].startswith('http') %}
+        <img src="{{ decoration['image'] }}">
+    {% else %}
+        <img src="{{ url_for('static', filename='uploads/' + decoration['image']) }}">
+    {% endif %}
+
 {% endfor %}
-```
 
 </div>
 
